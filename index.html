@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Ziarno | palarnia i kawiarnia, pokaz stylu</title>
+<meta name="description" content="Pokazowa makieta strony kawiarni z animacją sterowaną przewijaniem.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;700&display=swap&subset=latin-ext" rel="stylesheet">
+<style>
+:root{
+  --esp:#150c07;
+  --roast:#2a170d;
+  --crema:#e9c999;
+  --amber:#e58b2a;
+  --milk:#f4ead9;
+  --mute:#b9a48a;
+  --gut:clamp(20px,5vw,64px);
+  --hd:'Instrument Serif','Times New Roman',serif;
+  --bd:'Manrope','Segoe UI',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;background:var(--esp)}
+body{font-family:var(--bd);font-size:17px;line-height:1.6;color:var(--milk);background:var(--esp);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--amber);outline-offset:3px;border-radius:3px}
+h1,h2,h3{font-family:var(--hd);font-weight:400;line-height:1}
+.wrap{max-width:1100px;margin:0 auto;padding:0 var(--gut)}
+
+header{position:fixed;inset:0 0 auto 0;z-index:40;display:flex;justify-content:space-between;align-items:center;padding:16px var(--gut);transition:background .4s}
+header.solid{background:rgba(21,12,7,.88);backdrop-filter:blur(8px)}
+.brand{font-family:var(--hd);font-size:30px;text-decoration:none;letter-spacing:.01em}
+nav{display:flex;gap:28px}
+nav a{text-decoration:none;font-weight:500;font-size:15px;color:var(--crema);opacity:.85;transition:opacity .2s}
+nav a:hover{opacity:1}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:50px;padding:0 28px;border-radius:999px;background:var(--amber);color:var(--esp);font-weight:700;font-size:16px;text-decoration:none;border:0;cursor:pointer;font-family:var(--bd);transition:transform .2s,background .2s}
+.btn:hover{background:#f19a3c}.btn:active{transform:scale(.97)}
+.btn.line{background:transparent;color:var(--milk);border:1.5px solid rgba(233,201,153,.6)}
+.btn.line:hover{background:var(--milk);color:var(--esp)}
+@media(max-width:700px){nav{display:none}}
+
+/* scroll stage */
+.track{position:relative;height:420vh}
+.stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;background:var(--esp)}
+.frame{position:absolute;inset:0;overflow:hidden}
+.frame img{position:absolute;left:50%;top:50%;width:100%;height:100%;object-fit:cover;object-position:62% 50%;will-change:transform;transform:translate(-50%,-50%)}
+.shade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(21,12,7,.82) 0,rgba(21,12,7,.35) 45%,rgba(21,12,7,0) 70%),radial-gradient(120% 90% at 60% 50%,transparent 45%,rgba(21,12,7,.7) 100%);pointer-events:none}
+.shade.b{background:linear-gradient(0deg,rgba(21,12,7,.9),transparent 40%)}
+.chap{position:absolute;left:var(--gut);bottom:clamp(60px,14vh,150px);max-width:min(560px,86vw);opacity:0;transform:translateY(24px);transition:opacity .6s,transform .8s cubic-bezier(.2,.7,.2,1);pointer-events:none}
+.chap.on{opacity:1;transform:none;pointer-events:auto}
+.chap h1,.chap h2{font-size:clamp(46px,8.4vw,112px);letter-spacing:-.01em}
+.chap h1 em,.chap h2 em{color:var(--crema)}
+.chap p{margin-top:18px;max-width:38ch;color:#e3d4bc;font-size:clamp(16px,1.8vw,19px)}
+.cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}
+.prog{position:absolute;right:var(--gut);top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:12px}
+.prog i{display:block;width:3px;height:34px;background:rgba(233,201,153,.25);border-radius:3px;overflow:hidden;position:relative}
+.prog i b{position:absolute;inset:0;background:var(--amber);transform:scaleY(0);transform-origin:top}
+.scrollhint{position:absolute;left:var(--gut);top:84px;font-size:13px;font-weight:500;color:var(--mute);letter-spacing:.02em}
+.bean{position:absolute;pointer-events:none;border-radius:50% 50% 46% 54%/60% 60% 40% 40%;background:radial-gradient(circle at 35% 30%,#7a4526,#2c1709 70%);box-shadow:inset -3px -4px 6px rgba(0,0,0,.5);will-change:transform}
+.bean::after{content:"";position:absolute;left:46%;top:8%;width:8%;height:84%;border-radius:50%;background:rgba(10,4,1,.7);transform:rotate(12deg)}
+
+/* sekcje */
+.sec{padding:clamp(70px,11vw,140px) 0;position:relative}
+.sec h2{font-size:clamp(42px,7vw,88px)}
+.sub{color:var(--mute);max-width:46ch;margin-top:14px}
+.menu{margin-top:48px;border-top:1px solid rgba(233,201,153,.3)}
+.mi{display:grid;grid-template-columns:1fr auto;gap:6px 24px;padding:22px 0;border-bottom:1px solid rgba(233,201,153,.2);transition:padding-left .3s,background .3s}
+.mi:hover{padding-left:12px;background:rgba(233,201,153,.05)}
+.mi h3{font-size:clamp(28px,3.4vw,38px)}
+.mi .p{font-family:var(--hd);font-size:34px;color:var(--amber)}
+.mi p{grid-column:1/2;color:var(--mute);font-size:15.5px}
+.how{background:var(--roast)}
+.cols{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(24px,4vw,56px);margin-top:44px}
+.cols div{border-top:2px solid var(--amber);padding-top:16px}
+.cols h3{font-size:30px;margin-bottom:8px}
+.cols p{color:var(--mute);font-size:16px}
+@media(max-width:760px){.cols{grid-template-columns:1fr}}
+
+/* zamówienie */
+.ord{display:grid;grid-template-columns:1fr 1.1fr;gap:clamp(24px,5vw,72px);margin-top:36px;align-items:start}
+.pick{list-style:none;border-top:1px solid rgba(233,201,153,.3)}
+.pick li{display:grid;grid-template-columns:1fr auto;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid rgba(233,201,153,.2)}
+.pick b{font-weight:700;display:block;font-size:17px}
+.pick small{color:var(--mute);font-size:14px}
+.qty{display:flex;align-items:center;gap:6px}
+.qty button{width:44px;height:44px;border-radius:50%;border:1.5px solid rgba(233,201,153,.55);background:transparent;color:var(--milk);font-size:22px;cursor:pointer;line-height:1}
+.qty button:hover{background:var(--amber);color:var(--esp);border-color:var(--amber)}
+.qty output{min-width:28px;text-align:center;font-family:var(--hd);font-size:28px}
+.card{background:var(--milk);color:var(--esp);border-radius:22px;padding:clamp(20px,3vw,34px)}
+.card label{display:block;font-weight:700;font-size:14px;margin-bottom:5px}
+.card input,.card select{width:100%;font:inherit;font-size:16px;padding:12px 14px;min-height:48px;border:1.5px solid #cdb99c;border-radius:12px;background:#fff;color:var(--esp)}
+.card input:focus,.card select:focus{outline:none;border-color:var(--amber)}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.sum{display:flex;justify-content:space-between;align-items:baseline;border-top:1px solid #cdb99c;padding-top:14px;margin:6px 0 14px}
+.sum b{font-family:var(--hd);font-size:42px;font-weight:400;color:#8a4a12}
+.sum span{font-size:14px;color:#6b5a45}
+.acts{display:flex;flex-wrap:wrap;gap:10px}.acts .btn{flex:1 1 150px}
+.card .btn.line{color:var(--esp);border-color:var(--esp)}.card .btn.line:hover{background:var(--esp);color:var(--milk)}
+.msg{min-height:22px;font-size:14px;font-weight:700;margin-top:10px;color:#6b3b1e}
+.empty{font-size:14px;color:#6b5a45;margin-bottom:12px}
+@media(max-width:860px){.ord{grid-template-columns:1fr}}
+footer{padding:44px 0 60px;color:var(--mute);font-size:14px;border-top:1px solid rgba(233,201,153,.2)}
+footer .wrap{display:flex;flex-direction:column;gap:8px}
+@media(prefers-reduced-motion:reduce){*{transition-duration:.01ms!important;animation:none!important}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<header id="hd">
+  <a class="brand" href="#start">Ziarno</a>
+  <nav aria-label="Menu">
+    <a href="#menu">Menu</a><a href="#palarnia">Palarnia</a><a href="#zamow">Zamów</a>
+  </nav>
+</header>
+
+<main>
+<section class="track" id="start">
+  <div class="stage" id="stage">
+    <div class="frame" id="frame"><img id="bean" src="bean.jpg" alt="Duże palone ziarno kawy w złotym świetle" width="1920" height="1080"></div>
+    <div class="shade"></div><div class="shade b"></div>
+    <div id="fly"></div>
+    <div class="scrollhint" id="hint">Przewijaj powoli</div>
+
+    <div class="chap on" data-i="0">
+      <h1>Kawa, która<br><em>nie spieszy się</em></h1>
+      <p>Palimy małe partie ziaren i parzymy je dopiero na Twoje zamówienie.</p>
+      <div class="cta"><a class="btn" href="#zamow">Zamów na odbiór</a><a class="btn line" href="#menu">Zobacz menu</a></div>
+    </div>
+    <div class="chap" data-i="1">
+      <h2>Każde ziarno ma swoją <em>rysę</em></h2>
+      <p>Pęka w piecu po około dziewięciu minutach. Wtedy znamy jego charakter.</p>
+    </div>
+    <div class="chap" data-i="2">
+      <h2>Zaparzona<br>na <em>Twoich oczach</em></h2>
+      <p>Espresso, przelew albo flat white, zawsze świeżo mielone.</p>
+      <div class="cta"><a class="btn" href="#zamow">Wybierz kawę</a></div>
+    </div>
+    <div class="prog" aria-hidden="true"><i><b></b></i><i><b></b></i><i><b></b></i></div>
+  </div>
+</section>
+
+<section class="sec" id="menu">
+  <div class="wrap">
+    <h2>Menu</h2>
+    <p class="sub">Przykładowa karta. Prawdziwe pozycje i ceny wstawimy po rozmowie z właścicielem.</p>
+    <div class="menu">
+      <div class="mi"><h3>Espresso</h3><span class="p">9 zł</span><p>Podwójne, ciemna palenie, słodki finisz czekolady.</p></div>
+      <div class="mi"><h3>Flat white</h3><span class="p">16 zł</span><p>Dwa espresso i aksamitne mleko.</p></div>
+      <div class="mi"><h3>Przelew V60</h3><span class="p">18 zł</span><p>Jasna palenie, nuty cytrusów i kwiatów.</p></div>
+      <div class="mi"><h3>Cold brew</h3><span class="p">17 zł</span><p>Parzony na zimno przez 16 godzin.</p></div>
+      <div class="mi"><h3>Ziarna 250 g</h3><span class="p">42 zł</span><p>Palone w tym tygodniu, mielone na prośbę.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec how" id="palarnia">
+  <div class="wrap">
+    <h2>Od ziarna do filiżanki</h2>
+    <div class="cols">
+      <div><h3>Wybieramy</h3><p>Małe partie od plantatorów, których znamy z nazwiska.</p></div>
+      <div><h3>Palimy</h3><p>Powoli, w niewielkich ilościach, żeby każde ziarno dojrzało tak samo.</p></div>
+      <div><h3>Parzymy</h3><p>Po zamówieniu, nie wcześniej. Kawa nie czeka na gościa.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="zamow">
+  <div class="wrap">
+    <h2>Zamów na odbiór</h2>
+    <p class="sub">Wybierz kawy i godzinę. Dostaniesz gotową wiadomość do kawiarni.</p>
+    <div class="ord">
+      <ul class="pick" id="pick"></ul>
+      <div class="card">
+        <div class="fr">
+          <div><label for="nm">Imię</label><input id="nm" autocomplete="given-name" placeholder="np. Marta"></div>
+          <div><label for="tm">Odbiór o</label><select id="tm"></select></div>
+        </div>
+        <div class="empty" id="empty">Wybierz przynajmniej jedną pozycję.</div>
+        <div class="sum"><span>Razem</span><b id="tot">0 zł</b></div>
+        <div class="acts">
+          <a class="btn" id="mail" href="#">Wyślij e-mailem</a>
+          <button type="button" class="btn line" id="copy">Kopiuj zamówienie</button>
+        </div>
+        <div class="msg" id="msg" role="status" aria-live="polite"></div>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <b style="color:var(--milk);font-family:var(--hd);font-size:26px;font-weight:400">Ziarno</b>
+    <span>To pokazowa makieta bez prawdziwych danych kawiarni. Zdjęcie ziarna jest wygenerowane komputerowo. W pełnej wersji pojawią się Wasze zdjęcia, godziny otwarcia i adres.</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+var $=function(i){return document.getElementById(i)};
+var hd=$('hd'),track=document.querySelector('.track'),stage=$('stage'),img=$('bean'),chaps=document.querySelectorAll('.chap'),bars=document.querySelectorAll('.prog b'),fly=$('fly'),hint=$('hint');
+var still=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* anchors also in data: preview */
+document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('a[href^="#"]');if(!a)return;var id=a.getAttribute('href').slice(1);var t=id&&$(id);if(t){e.preventDefault();window.scrollTo({top:t.getBoundingClientRect().top+window.scrollY-(id==='start'?0:40),behavior:'smooth'})}});
+
+/* ziarna w powietrzu */
+var beans=[];
+for(var i=0;i<14;i++){var b=document.createElement('div');b.className='bean';var s=10+Math.random()*26;b.style.width=s+'px';b.style.height=s*1.35+'px';b.style.left=Math.random()*100+'%';b.style.top=Math.random()*100+'%';b.style.opacity=.35+Math.random()*.5;b.style.filter='blur('+(s>28?1.5:0)+'px)';fly.appendChild(b);beans.push({el:b,k:.3+Math.random()*1.3,r:Math.random()*360,s:Math.random()*80-40,ph:Math.random()*6})}
+
+/* pozycja szczeliny ziarna w kadrze (cover) */
+var GX=.665,GY=.43;
+function groove(){var W=stage.clientWidth,H=stage.clientHeight,ir=1920/1080,sr=W/H,dw,dh;
+ if(sr>ir){dw=W;dh=W/ir}else{dh=H;dw=H*ir}
+ var ox=.62,left=(W-dw)*ox,top=(H-dh)*.5;return {x:left+GX*dw,y:top+GY*dh,W:W,H:H}}
+
+var cur=0,ticking=false;
+function ease(t){return t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2}
+function update(){ticking=false;
+ var r=track.getBoundingClientRect(),total=track.offsetHeight-innerHeight;
+ var p=Math.min(1,Math.max(0,-r.top/total));
+ hd.classList.toggle('solid',scrollY>40);
+ hint.style.opacity=p<.04?1:0;
+ var g=groove(),z,ty,rot;
+ /* 0-.35 spokojny dryf, .35-.7 zbliżenie na szczelinę, .7-1 odjazd i obrót */
+ var a=Math.min(1,p/.35),b=Math.min(1,Math.max(0,(p-.35)/.35)),c=Math.min(1,Math.max(0,(p-.7)/.3));
+ z=1+.12*ease(a)+1.9*ease(b)-1.35*ease(c);
+ rot=-4*ease(a)+4*ease(b)+2*ease(c);
+ var ox=g.x,oy=g.y;
+ img.style.transformOrigin=ox+'px '+oy+'px';
+ img.style.transform='translate(-50%,-50%) scale('+z.toFixed(4)+') rotate('+rot.toFixed(2)+'deg)';
+ var idx=p<.34?0:p<.68?1:2;
+ if(idx!==cur||!chaps[idx].classList.contains('on')){chaps.forEach(function(x,i){x.classList.toggle('on',i===idx)});cur=idx}
+ bars.forEach(function(el,i){var v=Math.min(1,Math.max(0,p*3-i));el.style.transform='scaleY('+v+')'});
+ if(!still){beans.forEach(function(o,i){var y=(p*o.k*-420)+Math.sin(p*7+o.ph)*14,x=Math.cos(p*5+o.ph)*18+p*o.s;o.el.style.transform='translate('+x+'px,'+y+'px) rotate('+(o.r+p*o.s*5)+'deg)'})}
+}
+function req(){if(!ticking){ticking=true;requestAnimationFrame(update)}}
+addEventListener('scroll',req,{passive:true});addEventListener('resize',req);update();
+
+/* zamówienie */
+var items=[['Espresso','podwójne',9],['Flat white','dwa espresso, mleko',16],['Przelew V60','jasna palenie',18],['Cold brew','16 godzin na zimno',17],['Ziarna 250 g','palone w tym tygodniu',42]];
+var q=items.map(function(){return 0}),ul=$('pick');
+items.forEach(function(it,i){var li=document.createElement('li');li.innerHTML='<div><b>'+it[0]+'</b><small>'+it[1]+' · '+it[2]+' zł</small></div><div class="qty"><button type="button" aria-label="Mniej: '+it[0]+'">−</button><output>0</output><button type="button" aria-label="Więcej: '+it[0]+'">+</button></div>';
+ var bs=li.querySelectorAll('button'),o=li.querySelector('output');
+ bs[0].onclick=function(){q[i]=Math.max(0,q[i]-1);o.textContent=q[i];calc()};
+ bs[1].onclick=function(){q[i]=Math.min(9,q[i]+1);o.textContent=q[i];calc()};ul.appendChild(li)});
+var tm=$('tm');['jak najszybciej','za 15 minut','za 30 minut','za godzinę'].forEach(function(t){var o=document.createElement('option');o.textContent=t;tm.appendChild(o)});
+function txt(){var L=['Dzień dobry,','','chcę zamówić na odbiór:'],t=0;
+ items.forEach(function(it,i){if(q[i]){L.push('• '+it[0]+' × '+q[i]);t+=q[i]*it[2]}});
+ L.push('','Odbiór: '+tm.value,'Razem: '+t+' zł');var n=$('nm').value.trim();if(n)L.push('','Imię: '+n);return {t:t,s:L.join('\n')}}
+function calc(){var r=txt();$('tot').textContent=r.t+' zł';$('empty').style.display=r.t?'none':'block';
+ $('mail').href='mailto:zamowienia@example.pl?subject='+encodeURIComponent('Zamówienie na odbiór')+'&body='+encodeURIComponent(r.s)}
+$('nm').addEventListener('input',calc);tm.addEventListener('change',calc);
+$('copy').addEventListener('click',function(){var m=$('msg'),r=txt();if(!r.t){m.textContent='Najpierw wybierz pozycję.';return}
+ if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(r.s).then(function(){m.textContent='Skopiowano. Wklej w wiadomość do kawiarni.'},function(){m.textContent='Nie udało się skopiować.'})}else{m.textContent='Nie udało się skopiować.'}});
+$('mail').addEventListener('click',function(e){if(!txt().t){e.preventDefault();$('msg').textContent='Najpierw wybierz pozycję.'}});
+calc();
+})();
+</script>
+</body>
+</html>
