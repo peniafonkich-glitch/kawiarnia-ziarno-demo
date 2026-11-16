@@ -61,6 +61,18 @@ nav a:hover{opacity:1}
 .bean{position:absolute;pointer-events:none;border-radius:50% 50% 46% 54%/60% 60% 40% 40%;background:radial-gradient(circle at 35% 30%,#7a4526,#2c1709 70%);box-shadow:inset -3px -4px 6px rgba(0,0,0,.5);will-change:transform}
 .bean::after{content:"";position:absolute;left:46%;top:8%;width:8%;height:84%;border-radius:50%;background:rgba(10,4,1,.7);transform:rotate(12deg)}
 
+/* stage 2: model 3D */
+.track2{position:relative;height:360vh}
+.stage2{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;background:radial-gradient(70% 60% at 68% 52%,#5a3115 0,#2a170d 55%,#150c07 100%)}
+#cupc{position:absolute;inset:0;width:100%;height:100%;display:block}
+.load{position:absolute;right:var(--gut);bottom:40px;font-size:13px;color:var(--mute);transition:opacity .5s}
+.chap2{position:absolute;left:var(--gut);bottom:clamp(60px,14vh,150px);max-width:min(520px,86vw);opacity:0;transform:translateY(24px);transition:opacity .6s,transform .8s cubic-bezier(.2,.7,.2,1);pointer-events:none}
+.chap2.on{opacity:1;transform:none;pointer-events:auto}
+.chap2 h2{font-size:clamp(44px,7.4vw,96px)}
+.chap2 h2 em{color:var(--crema)}
+.chap2 p{margin-top:16px;max-width:36ch;color:#e3d4bc}
+@media(max-width:700px){#cupc{height:70%}.chap2{bottom:50px}}
+
 /* sekcje */
 .sec{padding:clamp(70px,11vw,140px) 0;position:relative}
 .sec h2{font-size:clamp(42px,7vw,88px)}
@@ -141,6 +153,26 @@ footer .wrap{display:flex;flex-direction:column;gap:8px}
   </div>
 </section>
 
+<section class="track2" id="kubek">
+  <div class="stage2" id="stage2">
+    <canvas id="cupc" aria-hidden="true"></canvas>
+    <div class="load" id="load">Ładuję model 3D…</div>
+    <div class="chap2 on" data-i="0">
+      <h2>Zabierz ją <em>ze sobą</em></h2>
+      <p>Zamów z telefonu, a my zrobimy kawę, zanim dojdziesz.</p>
+    </div>
+    <div class="chap2" data-i="1">
+      <h2>Zamknięta <em>i ciepła</em></h2>
+      <p>Szczelna pokrywka i tekturowa osłona, żeby kawa dotarła tak, jak wyszła z ekspresu.</p>
+    </div>
+    <div class="chap2" data-i="2">
+      <h2>Odbierz<br>i <em>idź dalej</em></h2>
+      <p>Wybierz kawę poniżej, podaj godzinę, a my przygotujemy zamówienie.</p>
+      <div class="cta"><a class="btn" href="#zamow">Zamów na odbiór</a></div>
+    </div>
+  </div>
+</section>
+
 <section class="sec" id="menu">
   <div class="wrap">
     <h2>Menu</h2>
@@ -197,6 +229,47 @@ footer .wrap{display:flex;flex-direction:column;gap:8px}
   </div>
 </footer>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+<script>
+/* ---------- stage 2: kubek 3D sterowany przewijaniem ---------- */
+(function(){
+var cv=document.getElementById('cupc'),track=document.getElementById('kubek'),load=document.getElementById('load'),ch=document.querySelectorAll('.chap2');
+var ok=false;try{var t=document.createElement('canvas');ok=!!(window.WebGLRenderingContext&&(t.getContext('webgl')||t.getContext('experimental-webgl')))&&window.THREE&&THREE.GLTFLoader}catch(e){}
+if(!ok){track.style.display='none';return}
+var R=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:true});R.setPixelRatio(Math.min(devicePixelRatio||1,2));
+var S=new THREE.Scene(),cam=new THREE.PerspectiveCamera(32,1,.1,100);cam.position.set(0,0,7.2);
+S.add(new THREE.AmbientLight(0xffe6c4,.35));
+var key=new THREE.DirectionalLight(0xffd7a0,1.0);key.position.set(-3,4,5);S.add(key);
+var rim=new THREE.DirectionalLight(0xff9b45,1.1);rim.position.set(4,2,-4);S.add(rim);
+var fill=new THREE.DirectionalLight(0xbfd4ff,.25);fill.position.set(3,-1,4);S.add(fill);
+var pivot=new THREE.Group();S.add(pivot);var model=null;
+new THREE.GLTFLoader().load('cup.glb',function(g){
+ model=g.scene;var b=new THREE.Box3().setFromObject(model),sz=b.getSize(new THREE.Vector3()),c=b.getCenter(new THREE.Vector3());
+ var s=2.3/Math.max(sz.x,sz.y,sz.z);model.scale.setScalar(s);model.position.set(-c.x*s,-c.y*s,-c.z*s);
+ model.traverse(function(o){if(o.isMesh&&o.material){o.material.envMapIntensity=1;if(o.material.map)o.material.map.encoding=THREE.sRGBEncoding}});
+ pivot.add(model);load.style.opacity=0;setTimeout(function(){load.style.display='none'},600);draw()
+},undefined,function(){load.textContent='Nie udało się wczytać modelu 3D.'});
+R.outputEncoding=THREE.sRGBEncoding;
+function fit(){var w=cv.clientWidth,h=cv.clientHeight;if(!w||!h)return;R.setSize(w,h,false);cam.aspect=w/h;cam.position.z=w/h<.8?8.6:7.2;cam.updateProjectionMatrix();draw()}
+if(window.ResizeObserver)new ResizeObserver(fit).observe(cv);else addEventListener('resize',fit);
+var mx=0;addEventListener('pointermove',function(e){mx=(e.clientX/innerWidth-.5)*2});
+var still=matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches,vis=false,cur=-1;
+if('IntersectionObserver' in window)new IntersectionObserver(function(es){vis=es[0].isIntersecting;if(vis)draw()}).observe(document.getElementById('stage2'));else vis=true;
+function ease(t){return t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2}
+function draw(){if(!model)return;
+ var r=track.getBoundingClientRect(),tot=track.offsetHeight-innerHeight,p=Math.min(1,Math.max(0,-r.top/tot));
+ pivot.rotation.y=(still?0:p*Math.PI*2.2)+mx*.25-.6;
+ pivot.rotation.x=.12+Math.sin(p*Math.PI)*-.18;
+ var sc=1+.15*Math.sin(p*Math.PI);pivot.scale.setScalar(sc);
+ pivot.position.x=cv.clientWidth/cv.clientHeight<.8?0:1.1-.3*Math.sin(p*Math.PI);
+ pivot.position.y=cv.clientWidth/cv.clientHeight<.8?.7:0;
+ var idx=p<.34?0:p<.7?1:2;if(idx!==cur){cur=idx;ch.forEach(function(x,i){x.classList.toggle('on',i===idx)})}
+ R.render(S,cam)}
+function loop(){requestAnimationFrame(loop);if(vis&&model)draw()}
+loop();
+})();
+</script>
 <script>
 (function(){
 var $=function(i){return document.getElementById(i)};
